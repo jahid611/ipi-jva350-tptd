@@ -44,6 +44,14 @@ https://git-scm.com/download/win ). Quelques liens :
 - vérifiez que le workflow correspondant a été committé, et qu'un job de build a été lancé
 - suivre les bonnes pratiques : à chaque commit, si son build casse, ne pas le laisser dans cet état !
 
+FAQ / Gotchas :
+- erreur The Dependency graph is disabled for this repository. Please enable it before submitting snapshots
+=>
+https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/configuring-the-dependency-graph
+  - Settings > Code security and analysis > then next to "Dependency Graph", click Enable.
+  - OU supprimer dans le workflow la partie "Update dependency graph"
+
+
 ### Plateforme d'évaluation de la qualité
 
 - Connectez-vous à https://sonarcloud.io/ en vous identifiant à l'aide de votre compte Github

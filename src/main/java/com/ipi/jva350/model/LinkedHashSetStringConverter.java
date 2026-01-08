@@ -1,6 +1,6 @@
 package com.ipi.jva350.model;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedHashSet;

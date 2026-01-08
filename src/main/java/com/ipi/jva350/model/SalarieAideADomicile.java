@@ -1,6 +1,6 @@
 package com.ipi.jva350.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
