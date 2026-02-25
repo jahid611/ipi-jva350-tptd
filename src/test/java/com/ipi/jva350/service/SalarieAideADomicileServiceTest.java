@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,5 +38,24 @@ public class SalarieAideADomicileServiceTest {
         service.ajouteConge(salarie, debut, fin);
 
         verify(repo, times(1)).save(salarie);
+    }
+
+    @Test
+    void testCalculeLimiteEntrepriseCongesPermis() {
+        when(repo.partCongesPrisTotauxAnneeNMoins1()).thenReturn(0.2);
+
+        LocalDate moisEnCours = LocalDate.of(2023, 12, 1);
+        double congesPayesAcquisAnneeNMoins1 = 25.0;
+        LocalDate moisDebutContrat = LocalDate.of(2020, 1, 1);
+        LocalDate premierJourDeConge = LocalDate.of(2023, 12, 15);
+        LocalDate dernierJourDeConge = LocalDate.of(2023, 12, 20);
+
+        long limite = service.calculeLimiteEntrepriseCongesPermis(
+                moisEnCours, congesPayesAcquisAnneeNMoins1, moisDebutContrat,
+                premierJourDeConge, dernierJourDeConge
+        );
+
+        assertTrue(limite > 0);
+        verify(repo, times(1)).partCongesPrisTotauxAnneeNMoins1();
     }
 }
