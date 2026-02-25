@@ -190,3 +190,12 @@ fichier ne dépasse pas 1 MO.
 - Rédigez **ci-dessous** une courte analyse du rapport produit par Sonar (métriques, évolution, état général...) :
 
 Le rapport Sonar final indique...
+
+# Rapport Final - TP JVA350
+**Étudiant : Sayad Jahid**
+
+## État du projet
+* **Build CI** : Opérationnel sur GitHub Actions.
+* **Qualité** : Analyse SonarCloud effectuée. Les bugs critiques de calcul de congés et de jours fériés ont été corrigés.
+* **Tests** : Couverture assurée par JUnit 5 (Unitaires, Paramétrés), Mockito et Cucumber.
+* **Maintenabilité** : Javadoc générée, documentation MkDocs prête, et gestion des logs avec rotation configurée.
