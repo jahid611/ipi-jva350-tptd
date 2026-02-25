@@ -1,0 +1,4 @@
+site_name: Documentation JVA350
+theme: readthedocs
+nav:
+  - Accueil: index.md

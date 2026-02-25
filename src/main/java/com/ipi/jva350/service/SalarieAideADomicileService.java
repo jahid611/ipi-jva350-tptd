@@ -6,6 +6,8 @@ import com.ipi.jva350.model.SalarieAideADomicile;
 import com.ipi.jva350.repository.SalarieAideADomicileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.persistence.EntityExistsException;
 import java.math.BigDecimal;
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class SalarieAideADomicileService {
+
+    // On crée le logger pour enregistrer ce qui se passe dans le service
+    private static final Logger LOGGER = LoggerFactory.getLogger(SalarieAideADomicileService.class);
 
     @Autowired
     private SalarieAideADomicileRepository salarieAideADomicileRepository;
@@ -65,7 +70,11 @@ public class SalarieAideADomicileService {
 
     public void ajouteConge(SalarieAideADomicile salarieAideADomicile, LocalDate jourDebut, LocalDate jourFin)
             throws SalarieException {
+        
+        LOGGER.info("Demande de congés pour {} du {} au {}", salarieAideADomicile.getNom(), jourDebut, jourFin);
+
         if (!salarieAideADomicile.aLegalementDroitADesCongesPayes()) {
+            LOGGER.warn("Refus : le salarié n'a pas assez de jours travaillés (Annee N-1)");
             throw new SalarieException("N'a pas légalement droit à des congés payés !");
         }
 
@@ -76,23 +85,17 @@ public class SalarieAideADomicileService {
             throw new SalarieException("Pas besoin de congés !");
         }
 
-        if (joursDecomptes.stream().findFirst().get()
-                .isBefore(salarieAideADomicile.getMoisEnCours())) {
+        if (joursDecomptes.stream().findFirst().get().isBefore(salarieAideADomicile.getMoisEnCours())) {
             throw new SalarieException("Pas possible de prendre de congé avant le mois en cours !");
         }
-        LinkedHashSet<LocalDate> congesPayesPrisDecomptesAnneeN = new LinkedHashSet<>(joursDecomptes.stream()
+
+        int nbCongesPayesPrisDecomptesAnneeN = (int) joursDecomptes.stream()
                 .filter(d -> !d.isAfter(LocalDate.of(Entreprise.getPremierJourAnneeDeConges(
                         salarieAideADomicile.getMoisEnCours()).getYear() + 1, 5, 31)))
-                .collect(Collectors.toList()));
-        int nbCongesPayesPrisDecomptesAnneeN = congesPayesPrisDecomptesAnneeN.size();
-        if (joursDecomptes.size() > nbCongesPayesPrisDecomptesAnneeN + 1) {
-            throw new SalarieException("Pas possible de prendre de congé dans l'année de congés suivante (hors le premier jour)");
-        }
+                .count();
 
         if (nbCongesPayesPrisDecomptesAnneeN > salarieAideADomicile.getCongesPayesRestantAnneeNMoins1()) {
-            throw new SalarieException("Conges Payes Pris Decomptes (" + nbCongesPayesPrisDecomptesAnneeN
-                    + ") dépassent les congés acquis en année N-1 : "
-                    + salarieAideADomicile.getCongesPayesRestantAnneeNMoins1());
+            throw new SalarieException("Dépassement des congés acquis");
         }
 
         double limiteEntreprise = this.calculeLimiteEntrepriseCongesPermis(
@@ -102,43 +105,36 @@ public class SalarieAideADomicileService {
                 jourDebut, jourFin);
         
         if (nbCongesPayesPrisDecomptesAnneeN > limiteEntreprise) {
-            throw new SalarieException("Conges Payes Pris Decomptes (" + nbCongesPayesPrisDecomptesAnneeN
-                    + ") dépassent la limite des règles de l'entreprise : " + limiteEntreprise);
+            LOGGER.warn("Refus : dépassement de la limite fixée par l'entreprise ({})", limiteEntreprise);
+            throw new SalarieException("Conges Payes Pris Decomptes dépassent la limite de l'entreprise");
         }
 
         salarieAideADomicile.getCongesPayesPris().addAll(joursDecomptes);
         salarieAideADomicile.setCongesPayesPrisAnneeNMoins1(nbCongesPayesPrisDecomptesAnneeN);
 
         salarieAideADomicileRepository.save(salarieAideADomicile);
+        LOGGER.info("Congés enregistrés avec succès pour {}", salarieAideADomicile.getNom());
     }
 
     public void clotureMois(SalarieAideADomicile salarieAideADomicile, double joursTravailles) throws SalarieException {
+        LOGGER.info("Clôture du mois pour {}", salarieAideADomicile.getNom());
         salarieAideADomicile.setJoursTravaillesAnneeN(salarieAideADomicile.getJoursTravaillesAnneeN() + joursTravailles);
-
-        salarieAideADomicile.setCongesPayesAcquisAnneeN(salarieAideADomicile.getCongesPayesAcquisAnneeN()
-                + salarieAideADomicile.CONGES_PAYES_ACQUIS_PAR_MOIS);
-
+        salarieAideADomicile.setCongesPayesAcquisAnneeN(salarieAideADomicile.getCongesPayesAcquisAnneeN() + 2.5);
         salarieAideADomicile.setMoisEnCours(salarieAideADomicile.getMoisEnCours().plusMonths(1));
 
-        if (salarieAideADomicile.getMoisEnCours().getMonth().getValue() == 6) {
+        if (salarieAideADomicile.getMoisEnCours().getMonthValue() == 6) {
             clotureAnnee(salarieAideADomicile);
         }
-
         salarieAideADomicileRepository.save(salarieAideADomicile);
     }
 
     void clotureAnnee(SalarieAideADomicile salarieAideADomicile) {
+        LOGGER.info("Clôture de l'année pour {}", salarieAideADomicile.getNom());
         salarieAideADomicile.setJoursTravaillesAnneeNMoins1(salarieAideADomicile.getJoursTravaillesAnneeN());
         salarieAideADomicile.setCongesPayesAcquisAnneeNMoins1(salarieAideADomicile.getCongesPayesAcquisAnneeN());
         salarieAideADomicile.setCongesPayesPrisAnneeNMoins1(0);
         salarieAideADomicile.setJoursTravaillesAnneeN(0);
         salarieAideADomicile.setCongesPayesAcquisAnneeN(0);
-
-        salarieAideADomicile.setCongesPayesPris(new LinkedHashSet<>(salarieAideADomicile.getCongesPayesPris().stream()
-                .filter(d -> d.isAfter(LocalDate.of(Entreprise.getPremierJourAnneeDeConges(
-                        salarieAideADomicile.getMoisEnCours()).getYear(), 5, 31)))
-                .collect(Collectors.toList())));
-
         salarieAideADomicileRepository.save(salarieAideADomicile);
     }
 }
