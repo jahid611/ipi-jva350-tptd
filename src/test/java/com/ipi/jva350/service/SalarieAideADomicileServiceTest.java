@@ -26,7 +26,7 @@ public class SalarieAideADomicileServiceTest {
     void testAjouteConge() throws SalarieException {
         SalarieAideADomicile salarie = new SalarieAideADomicile();
         salarie.setCongesPayesAcquisAnneeNMoins1(10);
-        salarie.setJoursTravaillesAnneeN(20);
+        salarie.setJoursTravaillesAnneeNMoins1(20);
         
         LocalDate debut = LocalDate.now().plusDays(1);
         LocalDate fin = LocalDate.now().plusDays(3);
