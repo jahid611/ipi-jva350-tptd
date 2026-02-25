@@ -2,7 +2,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master", "evaluation" ]
+    branches: [ "master", "evaluation" ] 
   pull_request:
     branches: [ "master", "evaluation" ]
 
@@ -13,16 +13,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # Nécessaire pour que SonarCloud puisse analyser tout l'historique
+        fetch-depth: 0 
+
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      # On lance le build, les tests et l'analyse Sonar d'un seul coup
-      run: mvn -B package --file pom.xml verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jahid611_ipi-jva350-tptd
+
+    - name: Build with Maven and SonarCloud
+      
+      run: mvn -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jahid611_ipi-jva350-tptd
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
