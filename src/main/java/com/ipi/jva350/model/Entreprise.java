@@ -130,23 +130,21 @@ public final class Entreprise {
     }
 
 public static boolean estJourFerie(LocalDate jour) {
-        int annee = jour.getYear();
         int mois = jour.getMonthValue();
         int quantieme = jour.getDayOfMonth();
 
-        // Jours fériés fixes
-        if (mois == 1 && quantieme == 1) return true; // Jour de l'an
-        if (mois == 5 && quantieme == 1) return true; // Fête du travail
-        if (mois == 5 && quantieme == 8) return true; // Victoire 1945
-        if (mois == 7 && quantieme == 14) return true; // Fête nationale
-        if (mois == 8 && quantieme == 15) return true; // Assomption
-        if (mois == 11 && quantieme == 1) return true; // Toussaint
-        if (mois == 11 && quantieme == 11) return true; // Armistice
-        if (mois == 12 && quantieme == 25) return true; // Noël
+        // jours fériés fixes
+        if (mois == 1 && quantieme == 1) return true; // 1er de l'an
+        if (mois == 5 && quantieme == 1) return true; // fete du travail
+        if (mois == 5 && quantieme == 8) return true; // victoire 45
+        if (mois == 7 && quantieme == 14) return true; // fete nat
+        if (mois == 8 && quantieme == 15) return true; // assomption
+        if (mois == 11 && quantieme == 1) return true; // toussaint
+        if (mois == 11 && quantieme == 11) return true; // armistice
+        if (mois == 12 && quantieme == 25) return true; // noel
 
-        // Jours fériés mobiles (Pâques, Ascension, Pentecôte)
-        // L'erreur classique était souvent sur le calcul de Pâques ou les bornes des dates mobiles
-        LocalDate paques = paques(annee); // Assure-toi que la méthode paques() existe juste en dessous dans la classe
+        // jours fériés qui bougent selon la date de paques
+        LocalDate paques = paques(jour.getYear());
         LocalDate lundiPaques = paques.plusDays(1);
         LocalDate ascension = paques.plusDays(39);
         LocalDate lundiPentecote = paques.plusDays(50);
