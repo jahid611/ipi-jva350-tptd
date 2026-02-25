@@ -39,8 +39,9 @@ public class SalarieAideADomicileTest {
         LocalDate fin = LocalDate.parse(finStr);
         SalarieAideADomicile salarie = new SalarieAideADomicile();
 
-        // on calcule et on vérifie direct
-        int resultat = salarie.calculeJoursDeCongeDecomptesPourPlage(debut, fin);
+        // la méthode renvoie une liste de dates, donc on utilise .size() pour avoir le nombre
+        int resultat = salarie.calculeJoursDeCongeDecomptesPourPlage(debut, fin).size();
+        
         assertEquals(attendu, resultat);
     }
 }
