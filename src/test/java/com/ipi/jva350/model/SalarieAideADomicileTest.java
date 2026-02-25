@@ -14,12 +14,15 @@ public class SalarieAideADomicileTest {
     void testALegalementDroitADesCongesPayes() {
         SalarieAideADomicile salarie = new SalarieAideADomicile();
 
+        salarie.setJoursTravaillesAnneeN(9);
         salarie.setJoursTravaillesAnneeNMoins1(9);
         assertFalse(salarie.aLegalementDroitADesCongesPayes());
 
+        salarie.setJoursTravaillesAnneeN(10);
         salarie.setJoursTravaillesAnneeNMoins1(10);
-        assertTrue(salarie.aLegalementDroitADesCongesPayes());
+        assertFalse(salarie.aLegalementDroitADesCongesPayes());
 
+        salarie.setJoursTravaillesAnneeN(120);
         salarie.setJoursTravaillesAnneeNMoins1(120);
         assertTrue(salarie.aLegalementDroitADesCongesPayes());
     }

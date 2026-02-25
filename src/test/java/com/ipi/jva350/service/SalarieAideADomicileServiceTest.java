@@ -27,6 +27,9 @@ public class SalarieAideADomicileServiceTest {
         SalarieAideADomicile salarie = new SalarieAideADomicile();
         salarie.setCongesPayesAcquisAnneeNMoins1(10);
         salarie.setJoursTravaillesAnneeNMoins1(20);
+        salarie.setJoursTravaillesAnneeN(20);
+        salarie.setMoisEnCours(LocalDate.now());
+        salarie.setMoisDebutContrat(LocalDate.now().minusYears(1));
         
         LocalDate debut = LocalDate.now().plusDays(1);
         LocalDate fin = LocalDate.now().plusDays(3);
