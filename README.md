@@ -191,6 +191,13 @@ fichier ne dépasse pas 1 MO.
 
 Le rapport Sonar final indique...
 
+# 🚀 Projet JVA350 - Sayad Jahid
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jahid611_ipi-jva350-tptd&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jahid611_ipi-jva350-tptd)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jahid611_ipi-jva350-tptd&metric=coverage)](https://sonarcloud.io/summary/new_code?id=jahid611_ipi-jva350-tptd)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jahid611_ipi-jva350-tptd&metric=bugs)](https://sonarcloud.io/summary/new_code?id=jahid611_ipi-jva350-tptd)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jahid611_ipi-jva350-tptd&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=jahid611_ipi-jva350-tptd)
+
 # Rapport Final - TP JVA350
 **Étudiant : Sayad Jahid**
 
