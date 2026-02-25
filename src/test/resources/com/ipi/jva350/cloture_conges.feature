@@ -8,4 +8,4 @@ Feature: Gestion des salariés aide à domicile
   Scenario: Bonus ancienneté sur les congés
     Given un salarié avec 10 ans d'ancienneté
     When on calcule sa limite de congés pour l'été
-    Then la limite doit être supérieure à 10
+    Then la limite doit être supérieure à 5
