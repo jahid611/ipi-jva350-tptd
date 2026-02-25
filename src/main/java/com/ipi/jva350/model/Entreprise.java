@@ -129,14 +129,29 @@ public final class Entreprise {
                 : LocalDate.of(d.getYear() - 1, 6, 1);
     }
 
-    public static boolean estJourFerie(LocalDate jour) {
-        int monEntier = (int) Entreprise.joursFeries(jour).stream().filter(d ->
-                d.equals(jour)).count();
-        int test = bissextile(jour.getYear()) ? 1 : 0;
-        if (test != 0 && !(monEntier > 1)) {
-            test--;
-        }
-        return monEntier != test;
+public static boolean estJourFerie(LocalDate jour) {
+        int annee = jour.getYear();
+        int mois = jour.getMonthValue();
+        int quantieme = jour.getDayOfMonth();
+
+        // Jours fériés fixes
+        if (mois == 1 && quantieme == 1) return true; // Jour de l'an
+        if (mois == 5 && quantieme == 1) return true; // Fête du travail
+        if (mois == 5 && quantieme == 8) return true; // Victoire 1945
+        if (mois == 7 && quantieme == 14) return true; // Fête nationale
+        if (mois == 8 && quantieme == 15) return true; // Assomption
+        if (mois == 11 && quantieme == 1) return true; // Toussaint
+        if (mois == 11 && quantieme == 11) return true; // Armistice
+        if (mois == 12 && quantieme == 25) return true; // Noël
+
+        // Jours fériés mobiles (Pâques, Ascension, Pentecôte)
+        // L'erreur classique était souvent sur le calcul de Pâques ou les bornes des dates mobiles
+        LocalDate paques = paques(annee); // Assure-toi que la méthode paques() existe juste en dessous dans la classe
+        LocalDate lundiPaques = paques.plusDays(1);
+        LocalDate ascension = paques.plusDays(39);
+        LocalDate lundiPentecote = paques.plusDays(50);
+
+        return jour.isEqual(lundiPaques) || jour.isEqual(ascension) || jour.isEqual(lundiPentecote);
     }
 
     /**
