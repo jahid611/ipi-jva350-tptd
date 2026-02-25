@@ -1,33 +1,40 @@
-package com.ipi.jva350;
+package com.ipi.jva350.model;
 
-import com.ipi.jva350.model.SalarieAideADomicile;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.time.LocalDate;
 
-public class StepDefinitions {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private SalarieAideADomicile salarie;
+public class EntrepriseTest {
 
-    @Given("un salarié aide à domicile existant avec {int} jours travaillés")
-    public void un_salarie_aide_a_domicile_existant_avec_jours_travailles(Integer joursInitiaux) {
-        // on initialise le salarié avec les jours du fichier feature
-        salarie = new SalarieAideADomicile();
-        salarie.setJoursTravaillesAnneeN(joursInitiaux);
+    @Test
+    void testEstDansPlage() {
+        LocalDate debut = LocalDate.of(2023, 1, 1);
+        LocalDate fin = LocalDate.of(2023, 1, 31);
+
+        assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 15), debut, fin));
+        assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 1), debut, fin));
+        assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 31), debut, fin));
+        
+        assertFalse(Entreprise.estDansPlage(LocalDate.of(2022, 12, 31), debut, fin));
+        assertFalse(Entreprise.estDansPlage(LocalDate.of(2023, 2, 1), debut, fin));
     }
 
-    @When("je clôture le mois avec {int} jours travaillés")
-    public void je_cloture_le_mois_avec_jours_travailles(Integer joursDuMois) {
-        // on ajoute les nouveaux jours de ce mois
-        double cumul = salarie.getJoursTravaillesAnneeN() + joursDuMois;
-        salarie.setJoursTravaillesAnneeN(cumul);
-    }
-
-    @Then("le salarié a {int} jours travaillés enregistrés")
-    public void le_salarie_a_jours_travailles_enregistres(Integer attendu) {
-        // on check si l'addition est bonne
-        assertEquals(attendu.doubleValue(), salarie.getJoursTravaillesAnneeN());
+    @ParameterizedTest
+    @CsvSource({
+            "2023-01-01, true",
+            "2023-05-01, true",
+            "2023-07-14, true",
+            "2023-12-25, true",
+            "2023-04-10, true",
+            "2023-01-02, false",
+            "2023-05-02, false"
+    })
+    void testEstJourFerie(String dateStr, boolean attendu) {
+        LocalDate date = LocalDate.parse(dateStr);
+        assertEquals(attendu, Entreprise.estJourFerie(date));
     }
 }
