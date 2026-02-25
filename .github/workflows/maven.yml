@@ -26,5 +26,5 @@ jobs:
       
       run: mvn -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jahid611_ipi-jva350-tptd
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
