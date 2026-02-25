@@ -15,7 +15,7 @@ public class EntrepriseTest {
         LocalDate debut = LocalDate.of(2023, 1, 1);
         LocalDate fin = LocalDate.of(2023, 1, 31);
 
-        assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 15), debut, fin));
+        assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 15), debut,  fin));
         assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 1), debut, fin));
         assertTrue(Entreprise.estDansPlage(LocalDate.of(2023, 1, 31), debut, fin));
         
