@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.ipi.jva350"},{"l":"com.ipi.jva350.exception"},{"l":"com.ipi.jva350.model"},{"l":"com.ipi.jva350.repository"},{"l":"com.ipi.jva350.service"}];updateSearchResults();
