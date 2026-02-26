@@ -189,7 +189,7 @@ fichier ne dépasse pas 1 MO.
 - BONUS : Créez une petite documentation statique en utilisant MkDocs.
 - Rédigez **ci-dessous** une courte analyse du rapport produit par Sonar (métriques, évolution, état général...) :
 
-Le rapport Sonar final indique...
+Le rapport Sonar final indique que le projet a atteint un niveau de qualité très satisfaisant, validant ainsi avec succès le Quality Gate. La dette technique a été traitée de manière exhaustive, avec l'élimination totale des vulnérabilités et des bugs (0 bug restant), permettant au projet d'obtenir la note maximale de « A » en maintenabilité et en fiabilité.
 
 # 🚀 Projet JVA350 - Sayad Jahid
 
@@ -200,6 +200,8 @@ Le rapport Sonar final indique...
 
 # Rapport Final - TP JVA350
 **Étudiant : Sayad Jahid**
+https://jahid611.github.io/ipi-jva350-tptd/
+http://127.0.0.1:5500/target/site/apidocs/index.html (en fonction de votre environnement et ip)
 
 ## État du projet
 * **Build CI** : Opérationnel sur GitHub Actions.
