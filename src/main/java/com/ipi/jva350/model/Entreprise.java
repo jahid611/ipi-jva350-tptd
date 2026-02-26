@@ -42,11 +42,11 @@ public final class Entreprise {
     public static List<LocalDate> joursFeries(LocalDate now){
 
         return Arrays.asList(
-                // 1er janvier	Jour de l’an
+                // 1er janvier  Jour de l’an
                 LocalDate.of(now.getYear(), 1,1),
-                // Lendemain du dimanche de Pâques.	Lundi de Pâques
+                // Lendemain du dimanche de Pâques. Lundi de Pâques
                 datePaque.get(now.getYear()).plusDays(1L),
-                // 1er mai	Fête du Travail
+                // 1er mai  Fête du Travail
                 LocalDate.of(now.getYear(), 5,1),
                 // 8 mai Fête de la Victoire
                 LocalDate.of(now.getYear(), 5,8),
@@ -58,7 +58,7 @@ public final class Entreprise {
                 LocalDate.of(now.getYear(), 7,14),
                 // 15 août Assomption
                 LocalDate.of(now.getYear(), 8,15),
-                // 1er novembre	Toussaint Fête de tous les saints de l’Église catholique.
+                // 1er novembre Toussaint Fête de tous les saints de l’Église catholique.
                 LocalDate.of(now.getYear(), 11,1),
                 // 11 novembre Armistice de 1918
                 LocalDate.of(now.getYear(), 11,11),
@@ -95,31 +95,23 @@ public final class Entreprise {
         if (mois >= 4) {
             proportionPonderee += 8;
         }
-        if (mois >= 5) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 6) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 7) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 8) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 9) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 10) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 11) {
-            proportionPonderee += 8;
-        }
-        if (mois >= 12) {
-            proportionPonderee += 8;
-        }
+        
+        proportionPonderee += calculerProportionResteAnnee(mois);
+        
         return proportionPonderee / 12d / 10d;
+    }
+    
+    private static int calculerProportionResteAnnee(int mois) {
+        int proportionSupplementaire = 0;
+        if (mois >= 5) { proportionSupplementaire += 8; }
+        if (mois >= 6) { proportionSupplementaire += 8; }
+        if (mois >= 7) { proportionSupplementaire += 8; }
+        if (mois >= 8) { proportionSupplementaire += 8; }
+        if (mois >= 9) { proportionSupplementaire += 8; }
+        if (mois >= 10) { proportionSupplementaire += 8; }
+        if (mois >= 11) { proportionSupplementaire += 8; }
+        if (mois >= 12) { proportionSupplementaire += 8; }
+        return proportionSupplementaire;
     }
 
 
@@ -148,21 +140,26 @@ public final class Entreprise {
         return LocalDate.of(annee, mois, jour);
     }
 
-public static boolean estJourFerie(LocalDate jour) {
+    public static boolean estJourFerie(LocalDate jour) {
+        if (estJourFerieFixe(jour)) {
+            return true;
+        }
+        return estJourFerieMobile(jour);
+    }
+
+    private static boolean estJourFerieFixe(LocalDate jour) {
         int mois = jour.getMonthValue();
         int quantieme = jour.getDayOfMonth();
 
-        // jours fériés fixes
         if (mois == 1 && quantieme == 1) return true; // 1er de l'an
-        if (mois == 5 && quantieme == 1) return true; // fete du travail
-        if (mois == 5 && quantieme == 8) return true; // victoire 45
+        if (mois == 5 && (quantieme == 1 || quantieme == 8)) return true; // fete du travail & victoire 45
         if (mois == 7 && quantieme == 14) return true; // fete nat
         if (mois == 8 && quantieme == 15) return true; // assomption
-        if (mois == 11 && quantieme == 1) return true; // toussaint
-        if (mois == 11 && quantieme == 11) return true; // armistice
-        if (mois == 12 && quantieme == 25) return true; // noel
+        if (mois == 11 && (quantieme == 1 || quantieme == 11)) return true; // toussaint & armistice
+        return mois == 12 && quantieme == 25; // noel
+    }
 
-        // jours fériés qui bougent selon la date de paques
+    private static boolean estJourFerieMobile(LocalDate jour) {
         LocalDate paques = paques(jour.getYear());
         LocalDate lundiPaques = paques.plusDays(1);
         LocalDate ascension = paques.plusDays(39);

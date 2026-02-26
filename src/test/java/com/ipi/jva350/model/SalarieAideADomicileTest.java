@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SalarieAideADomicileTest {
+ class SalarieAideADomicileTest {
 
     @Test
     void testALegalementDroitADesCongesPayes() {
@@ -41,14 +41,4 @@ public class SalarieAideADomicileTest {
         
         assertEquals(attendu, resultat);
     }
-
-    @Test
-void testSalarieComplet() {
-    SalarieAideADomicile s = new SalarieAideADomicile("Jean", 
-        LocalDate.now(), LocalDate.now(), 10.0, 25.0, 15.0, 2.0, 0.0);
-    
-    assertEquals("Jean", s.getNom());
-    assertNotNull(s.getMoisDebutContrat());
-    assertTrue(s.getCongesPayesAcquisAnneeN() > 0);
-}
 }

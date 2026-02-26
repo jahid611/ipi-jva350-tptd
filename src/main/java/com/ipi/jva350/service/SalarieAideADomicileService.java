@@ -10,16 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
 
 @Service
 public class SalarieAideADomicileService {
 
-    // On crée le logger pour enregistrer ce qui se passe dans le service
     private static final Logger LOGGER = LoggerFactory.getLogger(SalarieAideADomicileService.class);
 
     @Autowired
@@ -81,11 +80,15 @@ public class SalarieAideADomicileService {
         LinkedHashSet<LocalDate> joursDecomptes = salarieAideADomicile
                 .calculeJoursDeCongeDecomptesPourPlage(jourDebut, jourFin);
 
-        if (joursDecomptes.size() == 0) {
+        if (joursDecomptes.isEmpty()) {
             throw new SalarieException("Pas besoin de congés !");
         }
 
-        if (joursDecomptes.stream().findFirst().get().isBefore(salarieAideADomicile.getMoisEnCours())) {
+        LocalDate premierJour = joursDecomptes.stream()
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Aucun jour décompté trouvé"));
+
+        if (premierJour.isBefore(salarieAideADomicile.getMoisEnCours())) {
             throw new SalarieException("Pas possible de prendre de congé avant le mois en cours !");
         }
 
